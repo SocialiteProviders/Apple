@@ -196,7 +196,7 @@ class Provider extends AbstractProvider
     protected function mapUserToObject(array $user)
     {
         $requestValue = request('user');
-        if (! is_bool($requestValue) && ! is_array($requestValue) && trim((string) $requestValue) !== '') {
+        if (is_bool($requestValue) || is_array($requestValue) || trim((string) $requestValue) !== '') {
             $userRequest = json_decode(request('user'), true);
 
             if (array_key_exists('name', $userRequest)) {
