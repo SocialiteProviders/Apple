@@ -140,20 +140,18 @@ class Provider extends AbstractProvider
         });
 
         $publicKeys = JWK::parseKeySet($data);
-
-        $signatureVerified = false;
-
-        foreach ($publicKeys as $res) {
-            $publicKey = openssl_pkey_get_details($res);
+        
+        $kid = $token->getClaim('kid');
+        
+        if (isset($publicKeys[$kid])) {
+            $publicKey = openssl_pkey_get_details($publicKeys[$kid]);
+            
             if ($token->verify($signer, $publicKey['key'])) {
-                $signatureVerified = true;
+                return true;
             }
         }
-        if (!$signatureVerified) {
-            throw new InvalidStateException('Invalid JWT Signature');
-        }
-
-        return true;
+        
+        throw new InvalidStateException('Invalid JWT Signature');
     }
 
     /**
