@@ -214,11 +214,8 @@ class Provider extends AbstractProvider
 
         if (isset($userRequest['name'])) {
             $user['name'] = $userRequest['name'];
-            $fullName = trim(
-                ($user['name']['firstName'] ?? '')
-                .' '
-                .($user['name']['lastName'] ?? '')
-            );
+
+            $fullName = is_array($user["name"]) ? implode(' ', $user["name"]) : $user["name"];
         }
 
         return (new User())
